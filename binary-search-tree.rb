@@ -66,7 +66,6 @@ class Tree
     if node.nil?
       nil
     elsif node.data == value
-      puts 'Node exists. Node is provided below:'
       node
     elsif value < node.data
       find(value, node.left_children)
@@ -75,15 +74,48 @@ class Tree
     end
   end
 
-  def delete(value, node = root)
-    #find parentnode. if number does not exist in tree, state error, return. Else continue. 
-    #find if children exist. If .left_children && .right_children are nil, then delete the leaf node. 
-    # if !left_children.nil? || !right_children.nil? then take parent node of to delete node.
-    #   make parent node = delete node's left or right children. 
-    # if both children exist. Take parent node. Traverse right. Then recurse left till lowest value found. 
-    #  save the lowest node value, and equal it to the to be deleted node. i.e. replace it. 
+  def find_parent(value, node = root)
+    return nil if find(value).nil?
 
+    if root.data == value
+      nil
+    elsif node.left_children.data == value || node.right_children.data == value
+      node
+    elsif value < node.data
+      find_parent(value, node.left_children)
+    else
+      find_parent(value, node.right_children)
+    end
+  end
+
+  def next_largest_node(node)
+    node.left_children.nil? ? node : next_largest_node(node.left_children)
+  end
+
+  def delete(value, node = root)
+    return nil if find(value).nil?
+
+    parent_node = find_parent(value, node)
+    target_node = find(value, node)
+
+    # case 1: leaf node?
+    if target_node.left_children.nil? && target_node.right_children.nil?
+      parent_node.left_children == target_node ? parent_node.left_children = nil : parent_node.right_children = nil
+
+    # case 2: one l or r child node?
+    elsif target_node.right_children.nil?
+      target_node.data < parent_node.data ? parent_node.left_children = target_node.left_children : parent_node.right_children = target_node.left_children
+    elsif target_node.left_children.nil?
+      target_node.data < parent_node.data ? parent_node.left_children = target_node.right_children : parent_node.right_children = target_node.right_children
+
+    # case 3: both l and r child nodes?
+    elsif !target_node.left_children.nil? && !target_node.right_children.nil?
+      new_node = next_largest_node(target_node.right_children)
+      delete(new_node.data)
+      target_node.data = new_node.data
+    end
   end
 end
 
-test_tree = Tree.new([1,2,3,4])
+test_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+test_tree.pretty_print
