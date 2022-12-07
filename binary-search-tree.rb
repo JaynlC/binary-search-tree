@@ -35,6 +35,7 @@ class Tree
     end
   end
   
+  # pretty_print method copied from Odin forum, helps visualise tree. 
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right_children, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right_children
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -114,6 +115,25 @@ class Tree
       delete(new_node.data)
       target_node.data = new_node.data
     end
+  end
+
+  def level_order
+    return nil if root.nil?
+
+    q = []
+    result = []
+    q.push(root)
+    until q.empty?
+      node = q.shift
+      result.push(node.data)
+      q.push(node.left_children) unless node.left_children.nil?
+      q.push(node.right_children) unless node.right_children.nil?
+    end
+    result
+  end
+
+  def inorder
+    #left - root - right
   end
 end
 
