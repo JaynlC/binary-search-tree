@@ -124,16 +124,43 @@ class Tree
     result = []
     q.push(root)
     until q.empty?
+      
       node = q.shift
-      result.push(node.data)
+      result.push(block_given? ? yield(node) : node.data)
       q.push(node.left_children) unless node.left_children.nil?
       q.push(node.right_children) unless node.right_children.nil?
     end
     result
   end
 
-  def inorder
-    #left - root - right
+  def pre_order(result = [], node = root)
+    # root => left => right
+    return if node.nil?
+    
+    result.push(block_given? ? yield(node) : node.data)
+    pre_order(result, node.left_children)
+    pre_order(result, node.right_children)
+    result
+  end
+
+  def in_order(result = [], node = root)
+    #left => root => right
+    return if node.nil?
+
+    pre_order(result, node.left_children)
+    result.push(block_given? ? yield(node) : node.data)
+    pre_order(result, node.right_children)
+    result
+  end
+
+  def post_order(result = [], node = root)
+    # left => right => root
+    return if node.nil?
+
+    pre_order(result, node.left_children)
+    pre_order(result, node.right_children)
+    result.push(block_given? ? yield(node) : node.data)
+    result
   end
 end
 
