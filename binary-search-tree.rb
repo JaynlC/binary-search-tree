@@ -162,6 +162,20 @@ class Tree
     result.push(block_given? ? yield(node) : node.data)
     result
   end
+
+  def height(node = root, node_path = [], count = [])
+    return if node.nil?
+
+    node_path.push(node.data) unless node == root
+    # p node_path
+    if node.left_children.nil? && node.right_children.nil?
+      count.push(node_path.length)
+    end
+    height(node.left_children, node_path, count)
+    height(node.right_children, node_path, count)
+    node_path.pop
+    count.max
+  end
 end
 
 test_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
