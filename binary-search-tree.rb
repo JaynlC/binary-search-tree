@@ -163,18 +163,35 @@ class Tree
     result
   end
 
-  def height(node = root, node_path = [], count = [])
+  def height(value = nil, node = root, node_path = [], count = [])
     return if node.nil?
+    
+    #first time in recursion when value of queried node in tree given:
+    if !value.nil? && node == root
+      node = self.find(value)
+      return if node.nil?
+    end
 
-    node_path.push(node.data) unless node == root
+    node_path.push(node.data)
     # p node_path
     if node.left_children.nil? && node.right_children.nil?
       count.push(node_path.length)
     end
-    height(node.left_children, node_path, count)
-    height(node.right_children, node_path, count)
+    height(value, node.left_children, node_path, count)
+    height(value, node.right_children, node_path, count)
     node_path.pop
-    count.max
+    count.max - 1
+  end
+
+  def depth(value = nil) 
+    # if default arg, depth of tree == height of tree
+    tree_height = self.height
+    if value.nil?
+      tree_height
+    else
+      node_height = self.height(value)
+      node_height.nil? ? nil : tree_height - node_height
+    end
   end
 end
 
