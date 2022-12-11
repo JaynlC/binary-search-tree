@@ -185,12 +185,26 @@ class Tree
 
   def depth(value = nil) 
     # if default arg, depth of tree == height of tree
+    # This will not work for a very unbalanced tree. 
     tree_height = self.height
     if value.nil?
       tree_height
     else
       node_height = self.height(value)
       node_height.nil? ? nil : tree_height - node_height
+    end
+  end
+
+  def depth2(value = nil, node = root, count = 0)
+    return if node.nil?
+    if value == node.data
+      count
+    elsif value < node.data
+      count += 1
+      depth2(value, node.left_children, count)
+    elsif value > node.data
+      count += 1
+      depth2(value, node.right_children, count)
     end
   end
 end
