@@ -1,4 +1,4 @@
-# binary-search-tree
+# Binary Search Tree Showcase
 -----------
 -----------
 This is a project showcasing my understanding of binary search trees as part of learning about common data structures and algorithms.
@@ -6,7 +6,7 @@ This is a project showcasing my understanding of binary search trees as part of 
 **Key Functions:**
 -----------------
 
-**#build_tree** - Takes an array of data, sorts array, and turns it into a balanced binary tree (object).
+* **#build_tree** - Takes an array of data, sorts array, and turns it into a balanced binary tree (object).
 
 * **#insert** - Inserts given value into the tree.
 
