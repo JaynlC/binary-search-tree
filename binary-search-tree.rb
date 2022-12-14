@@ -182,32 +182,65 @@ class Tree
     node_path.pop
     count.max - 1
   end
+  
+  # This method below will not work for any unbalanced tree. 
+  # def depth(value = nil) 
+  #   # if default arg, depth of tree == height of tree
+  #   
+  #   tree_height = self.height
+  #   if value.nil?
+  #     tree_height
+  #   else
+  #     node_height = self.height(value)
+  #     node_height.nil? ? nil : tree_height - node_height
+  #   end
+  # end
 
-  def depth(value = nil) 
-    # if default arg, depth of tree == height of tree
-    # This will not work for a very unbalanced tree. 
-    tree_height = self.height
-    if value.nil?
-      tree_height
-    else
-      node_height = self.height(value)
-      node_height.nil? ? nil : tree_height - node_height
-    end
-  end
-
-  def depth2(value = nil, node = root, count = 0)
+  def depth(value = nil, node = root, count = 0)
     return if node.nil?
     if value == node.data
       count
     elsif value < node.data
       count += 1
-      depth2(value, node.left_children, count)
+      depth(value, node.left_children, count)
     elsif value > node.data
       count += 1
-      depth2(value, node.right_children, count)
+      depth(value, node.right_children, count)
     end
   end
-end
 
-test_tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
-test_tree.pretty_print
+  def balanced?
+    node = root
+    result = true
+    # right tree check
+    until node.right_children.nil?
+      left_height = self.height(node.left_children.data)
+      right_height = self.height(node.right_children.data)
+      if left_height != right_height
+        result = false
+        break
+      else
+        node = node.left_children
+      end
+    end
+    # left tree check
+    if result == true
+      until node.right_children.nil?
+        left_height = self.height(node.left_children.data)
+        right_height = self.height(node.right_children.data)
+        if left_height != right_height
+          result = false
+          break
+        else
+          node = node.right_children
+        end
+      end
+    end
+    result
+  end
+
+  def rebalance()
+    balanced_arr = self.in_order
+    @root = build_tree(balanced_arr)
+  end
+end
